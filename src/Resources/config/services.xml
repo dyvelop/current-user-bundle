@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="dyvelop.current_user.provider" class="Dyvelop\CurrentUserBundle\Security\CurrentUserProvider">
+            <argument type="service" id="security.token_storage"/>
+        </service>
+
+        <service id="dyvelop.current_user.annotation_driver"
+                 class="Dyvelop\CurrentUserBundle\Annotation\CurrentUserDriver">
+            <argument type="service" id="annotation_reader"/>
+            <argument type="service" id="dyvelop.current_user.provider"/>
+            <tag name="doctrine.event_listener" event="prePersist"/>
+            <tag name="doctrine.event_listener" event="preUpdate"/>
+        </service>
+    </services>
+
+</container>
