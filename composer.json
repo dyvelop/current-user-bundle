@@ -1,0 +1,33 @@
+{
+  "name": "dyvelop/current-user-bundle",
+  "type": "symfony-bundle",
+  "description": "Symfony bundle for fetching the user which is currently logged in",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Franziska Dyckhoff",
+      "email": "fdyckhoff@dyvelop.de"
+    }
+  ],
+  "require": {
+    "php": ">=5.3.9",
+    "symfony/config": "~2.3|~3.0",
+    "symfony/dependency-injection": "~2.3|~3.0",
+    "symfony/security": "~2.3|~3.0",
+	"doctrine/annotations": "~1.2",
+	"doctrine/orm": "~2.5"
+  },
+  "require-dev": {
+    "symfony/phpunit-bridge": "~2.7|~3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Dyvelop\\CurrentUserBundle\\": "src/"
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0-dev"
+    }
+  }
+}
