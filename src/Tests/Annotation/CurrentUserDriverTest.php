@@ -33,7 +33,7 @@ class CurrentUserDriverTest extends AbstractTestCase
     /**
      * Test initiating current user driver
      */
-    protected function testInit()
+    public function testInit()
     {
         $this->assertInstanceOf('Dyvelop\CurrentUserBundle\Annotation\CurrentUserDriver', $this->driver);
     }

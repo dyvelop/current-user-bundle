@@ -32,7 +32,7 @@ class CurrentUserProviderTest extends AbstractTestCase
     /**
      * Test initiating current user provider
      */
-    protected function testInit()
+    public function testInit()
     {
         $this->assertInstanceOf('Dyvelop\CurrentUserBundle\Security\CurrentUserProvider', $this->provider);
     }
