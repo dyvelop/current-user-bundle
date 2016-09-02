@@ -5,6 +5,8 @@ namespace Dyvelop\CurrentUserBundle\Tests\Security;
 use Dyvelop\CurrentUserBundle\Security\CurrentUserProvider;
 use Dyvelop\CurrentUserBundle\Tests\AbstractTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\User\User;
 
 /**
  * Class CurrentUserProviderTest
@@ -20,21 +22,12 @@ class CurrentUserProviderTest extends AbstractTestCase
 
 
     /**
-     * Set up tests
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->provider = new CurrentUserProvider($this->getSecurityTokenStub());
-    }
-
-
-    /**
      * Test initiating current user provider
      */
     public function testInit()
     {
-        $this->assertInstanceOf(CurrentUserProvider::class, $this->provider);
+        $tokenStorage = $this->getSecurityTokenStub();
+        $this->provider = new CurrentUserProvider($tokenStorage);
     }
 
 
@@ -43,8 +36,12 @@ class CurrentUserProviderTest extends AbstractTestCase
      */
     public function testGetUserWithoutToken()
     {
-        // TODO Implement!
-        $this->markTestIncomplete('TODO Implement!');
+        $tokenStorage = $this->getSecurityTokenStub();
+        $tokenStorage->expects($this->once())->method('getToken')->willReturn(null);
+        $this->provider = new CurrentUserProvider($tokenStorage);
+
+        $result = $this->provider->getUser();
+        $this->assertNull($result);
     }
 
 
@@ -53,8 +50,14 @@ class CurrentUserProviderTest extends AbstractTestCase
      */
     public function testGetUserForNonObject()
     {
-        // TODO Implement!
-        $this->markTestIncomplete('TODO Implement!');
+        $token = $this->getMock(TokenInterface::class);
+        $token->expects($this->once())->method('getUser')->willReturn('Anonymous');
+        $tokenStorage = $this->getSecurityTokenStub();
+        $tokenStorage->expects($this->once())->method('getToken')->willReturn($token);
+        $this->provider = new CurrentUserProvider($tokenStorage);
+
+        $result = $this->provider->getUser();
+        $this->assertNull($result);
     }
 
 
@@ -63,8 +66,15 @@ class CurrentUserProviderTest extends AbstractTestCase
      */
     public function testGetUser()
     {
-        // TODO Implement!
-        $this->markTestIncomplete('TODO Implement!');
+        $expected = new User('username', 'password');
+        $token = $this->getMock(TokenInterface::class);
+        $token->expects($this->once())->method('getUser')->willReturn($expected);
+        $tokenStorage = $this->getSecurityTokenStub();
+        $tokenStorage->expects($this->once())->method('getToken')->willReturn($token);
+        $this->provider = new CurrentUserProvider($tokenStorage);
+
+        $result = $this->provider->getUser();
+        $this->assertEquals($expected, $result);
     }
 
 
