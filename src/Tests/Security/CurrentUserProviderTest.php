@@ -34,7 +34,37 @@ class CurrentUserProviderTest extends AbstractTestCase
      */
     public function testInit()
     {
-        $this->assertInstanceOf('Dyvelop\CurrentUserBundle\Security\CurrentUserProvider', $this->provider);
+        $this->assertInstanceOf(CurrentUserProvider::class, $this->provider);
+    }
+
+
+    /**
+     * Test if get user method without valid token will return null
+     */
+    public function testGetUserWithoutToken()
+    {
+        // TODO Implement!
+        $this->markTestIncomplete('TODO Implement!');
+    }
+
+
+    /**
+     * Test if get user method not having a user object will return null
+     */
+    public function testGetUserForNonObject()
+    {
+        // TODO Implement!
+        $this->markTestIncomplete('TODO Implement!');
+    }
+
+
+    /**
+     * Test if get user method returns object
+     */
+    public function testGetUser()
+    {
+        // TODO Implement!
+        $this->markTestIncomplete('TODO Implement!');
     }
 
 
@@ -45,7 +75,7 @@ class CurrentUserProviderTest extends AbstractTestCase
      */
     protected function getSecurityTokenStub()
     {
-        $token = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
+        $token = $this->getMock(TokenStorageInterface::class);
 
         return $token;
     }

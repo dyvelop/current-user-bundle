@@ -35,7 +35,7 @@ class CurrentUserDriverTest extends AbstractTestCase
      */
     public function testInit()
     {
-        $this->assertInstanceOf('Dyvelop\CurrentUserBundle\Annotation\CurrentUserDriver', $this->driver);
+        $this->assertInstanceOf(CurrentUserDriver::class, $this->driver);
     }
 
 
@@ -46,7 +46,7 @@ class CurrentUserDriverTest extends AbstractTestCase
      */
     protected function getAnnotationReaderStub()
     {
-        $reader = $this->getMock('Doctrine\Common\Annotations\Reader');
+        $reader = $this->getMock(Reader::class);
 
         return $reader;
     }

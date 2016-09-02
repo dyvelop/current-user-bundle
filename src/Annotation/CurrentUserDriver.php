@@ -4,22 +4,24 @@ namespace Dyvelop\CurrentUserBundle\Annotation;
 
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Dyvelop\CurrentUserBundle\Security\CurrentUserAware;
 use Dyvelop\CurrentUserBundle\Security\CurrentUserProvider;
+use Dyvelop\CurrentUserBundle\Security\CurrentUserTrait;
 
 /**
  * Driver for current user annotation
  */
-class CurrentUserDriver
+class CurrentUserDriver implements CurrentUserAware
 {
+    /**
+     * Import standard implementation of the current user aware interface
+     */
+    use CurrentUserTrait;
+
     /**
      * @var Reader
      */
     protected $reader;
-
-    /**
-     * @var CurrentUserProvider
-     */
-    protected $currentUserProvider;
 
 
     /**
@@ -43,7 +45,7 @@ class CurrentUserDriver
     public function prePersist(LifecycleEventArgs $args)
     {
         // no user is logged in
-        if (null === $user = $this->currentUserProvider->getUser()) {
+        if (null === $user = $this->getCurrentUser()) {
             return;
         }
 
@@ -73,7 +75,7 @@ class CurrentUserDriver
      */
     public function preUpdate(LifecycleEventArgs $args)
     {
-        if (null === $user = $this->currentUserProvider->getUser()) {
+        if (null === $user = $this->getCurrentUser()) {
             return;
         }
 
