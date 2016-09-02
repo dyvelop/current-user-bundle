@@ -58,9 +58,9 @@ class CurrentUserAwareTest extends AbstractTestCase
      */
     public function testGetCurrentUser()
     {
-        $expected = $this->getMockBuilder(User::class)->disableOriginalConstructor()->getMock();
+        $expected = new User('username', 'password');
         $provider = $this->getCurrentUserProviderStub();
-        $provider->expects($this->once())->method('getCurrentUser')->willReturn($expected);
+        $provider->expects($this->once())->method('getUser')->willReturn($expected);
         $this->currentUserAware->setCurrentUserProvider($provider);
 
         $result = $this->currentUserAware->getCurrentUser();
@@ -75,7 +75,7 @@ class CurrentUserAwareTest extends AbstractTestCase
     public function testGetCurrentUserNull()
     {
         $provider = $this->getCurrentUserProviderStub();
-        $provider->expects($this->once())->method('getCurrentUser')->willReturn(null);
+        $provider->expects($this->once())->method('getUser')->willReturn(null);
         $this->currentUserAware->setCurrentUserProvider($provider);
 
         $result = $this->currentUserAware->getCurrentUser();
