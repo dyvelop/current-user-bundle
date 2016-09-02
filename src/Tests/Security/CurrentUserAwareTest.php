@@ -81,19 +81,6 @@ class CurrentUserAwareTest extends AbstractTestCase
         $result = $this->currentUserAware->getCurrentUser();
         $this->assertNull($result);
     }
-
-
-    /**
-     * Get current user provider stub
-     *
-     * @return \PHPUnit_Framework_MockObject_MockObject|CurrentUserProvider
-     */
-    protected function getCurrentUserProviderStub()
-    {
-        $provider = $this->getMockBuilder(CurrentUserProvider::class)->disableOriginalConstructor()->getMock();
-
-        return $provider;
-    }
 }
 
 class CurrentUserAwareMock implements CurrentUserAware
