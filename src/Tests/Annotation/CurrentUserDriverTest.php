@@ -2,9 +2,12 @@
 
 namespace Dyvelop\CurrentUserBundle\Tests\Annotation;
 
-use Doctrine\Common\Annotations\Reader;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Dyvelop\CurrentUserBundle\Annotation as Dyvelop;
 use Dyvelop\CurrentUserBundle\Annotation\CurrentUserDriver;
 use Dyvelop\CurrentUserBundle\Tests\AbstractTestCase;
+use Symfony\Component\Security\Core\User\User;
 
 /**
  * Class CurrentUserDriverTest
@@ -13,11 +16,20 @@ use Dyvelop\CurrentUserBundle\Tests\AbstractTestCase;
  */
 class CurrentUserDriverTest extends AbstractTestCase
 {
-
     /**
      * @var CurrentUserDriver
      */
     protected $driver;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $reader;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $provider;
 
 
     /**
@@ -26,7 +38,9 @@ class CurrentUserDriverTest extends AbstractTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->driver = new CurrentUserDriver($this->getAnnotationReaderStub(), $this->getCurrentUserProviderStub());
+        $this->reader = new AnnotationReader();
+        $this->provider = $this->getCurrentUserProviderStub();
+        $this->driver = new CurrentUserDriver($this->reader, $this->provider);
     }
 
 
@@ -40,14 +54,78 @@ class CurrentUserDriverTest extends AbstractTestCase
 
 
     /**
-     * Get annotation reader stub
-     *
-     * @return \PHPUnit_Framework_MockObject_MockObject|Reader
+     * Test pre-persist
      */
-    protected function getAnnotationReaderStub()
+    public function testPrePersist()
     {
-        $reader = $this->getMock(Reader::class);
+        $user = new User('username', 'password');
+        $this->provider->expects($this->once())->method('getUser')->willReturn($user);
 
-        return $reader;
+        $entity = new CurrentUserEntity();
+        $args = $this->getMockBuilder(LifecycleEventArgs::class)->disableOriginalConstructor()->getMock();
+        $args->expects($this->once())->method('getEntity')->willReturn($entity);
+
+        $this->driver->prePersist($args);
+        $this->assertEquals($user, $entity->currentUser);
+        $this->assertEquals($user, $entity->getPrePersistOnly());
+        $this->assertNull($entity->getPreUpdateOnly());
+    }
+
+
+    /**
+     * Test pre-update
+     */
+    public function testPreUpdate()
+    {
+        $user = new User('username', 'password');
+        $this->provider->expects($this->once())->method('getUser')->willReturn($user);
+
+        $entity = new CurrentUserEntity();
+        $args = $this->getMockBuilder(LifecycleEventArgs::class)->disableOriginalConstructor()->getMock();
+        $args->expects($this->once())->method('getEntity')->willReturn($entity);
+
+        $this->driver->preUpdate($args);
+        $this->assertEquals($user, $entity->currentUser);
+        $this->assertNull($entity->getPrePersistOnly());
+        $this->assertEquals($user, $entity->getPreUpdateOnly());
+    }
+}
+
+class CurrentUserEntity
+{
+    /**
+     * @var User
+     * @Dyvelop\CurrentUser(prePersist=true, preUpdate=true)
+     */
+    public $currentUser;
+
+    /**
+     * @var User
+     * @Dyvelop\CurrentUser(prePersist=true)
+     */
+    protected $prePersistOnly;
+
+    /**
+     * @var User
+     * @Dyvelop\CurrentUser(preUpdate=true)
+     */
+    private $preUpdateOnly;
+
+
+    /**
+     * @return User
+     */
+    public function getPrePersistOnly()
+    {
+        return $this->prePersistOnly;
+    }
+
+
+    /**
+     * @return User
+     */
+    public function getPreUpdateOnly()
+    {
+        return $this->preUpdateOnly;
     }
 }

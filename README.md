@@ -41,7 +41,7 @@ Mainly this bundle implements a service named `dyvelop.current_user.provider` wh
 
 ```php
 // fetch current user (the result is NULL when no one is logged in)
-$user = $this->container->get('dyvelop.current_user.provider')->getCurrentUser();
+$user = $this->container->get('dyvelop.current_user.provider')->getUser();
 ```
 
 You may use the `CurrentUserAware` interface and `CurrentUserTrait` helper to inject it into any other service.

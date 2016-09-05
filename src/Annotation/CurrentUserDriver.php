@@ -63,7 +63,6 @@ class CurrentUserDriver implements CurrentUserAware
             // set current user
             $property->setAccessible(true);
             $property->setValue($entity, $user);
-            break;
         }
     }
 
@@ -93,7 +92,6 @@ class CurrentUserDriver implements CurrentUserAware
             // set current user
             $property->setAccessible(true);
             $property->setValue($entity, $user);
-            break;
         }
     }
 }
