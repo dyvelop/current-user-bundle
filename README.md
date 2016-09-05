@@ -72,4 +72,4 @@ class Article
 In this example the current user will be set automatically as author of an article before persisting it to the database.
 
 Currently, only the `prePersist` and `preUpdate` lifecycle callbacks are implemented.
-Feed free to contribure some more ;)
+Feel free to contribute some more ;)
